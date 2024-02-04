@@ -16,7 +16,7 @@ const emits=defineEmits(['input'])
 const emitData = ref('');
 // Embedded in the form, just use the hook binding to perform form verification
 const [state] = useRuleFormItem(props, 'modelValue', 'input', emitData);
-const handleChange=(val)=>{
+const handleChange=(val:any)=>{
   if(val===undefined||val===null){
     emits('input','')
   }

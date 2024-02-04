@@ -261,8 +261,8 @@ export default defineComponent ( {
         valueField,
       } = props.schema;
       let eventKey = `on${upperFirst ( changeEvent )}`;
-      const isInput = component && ['Input', 'Slider', 'DateSelect',"InputNumber"].includes ( component );
-      const isChange = component && ['Rate', 'ColorPicker', 'DatePicker', 'TimeSelect',"DataSelect","CheckBoxGroup","RadioGroup"].includes ( component )
+      const isInput = component && ['Input', 'Slider', 'DateSelect',"InputNumber","RadioButton","DataInput"].includes ( component );
+      const isChange = component && ["Cascader",'Rate', 'ColorPicker', 'DatePicker', 'TimeSelect',"DataSelect","CheckBoxGroup","RadioGroup","CheckBoxButton"].includes ( component )
       if ( isInput ) {
         eventKey = `onInput`
       }
@@ -405,6 +405,7 @@ export default defineComponent ( {
             ...props.schema.itemProps,
           });
         }
+
         return (
           <div style="display: flex;width: 100%;">
             <div style="flex: 1; width: 100%;">
@@ -415,8 +416,8 @@ export default defineComponent ( {
                 label={renderLabelHelpMessage ()}
                 rules={handleRules ()}
               >
-                {getContent ()}
-                {showSuffix && <span class="suffix">{getSuffix}</span>}
+                  {getContent ()}
+                  {showSuffix && <span class="suffix">{getSuffix}</span>}
               </ElFormItem>
             </div>
           </div>
@@ -446,9 +447,14 @@ export default defineComponent ( {
 
       return (
         isIfShow && (
-          <el-row {...realColProps} v-show={isShow}>
-            {getContent ()}
-          </el-row>
+          <el-col {...realColProps} v-show={isShow}>
+            <div style="display: flex;width: 100%;">
+              <div style="flex: 1; width: 100%;">
+                {getContent ()}
+              </div>
+            </div>
+
+          </el-col>
         )
       );
     };

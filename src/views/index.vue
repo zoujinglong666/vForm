@@ -6,112 +6,92 @@ icon: ant-design:home-twotone
 </route>
 
 <script setup lang="ts">
-import {FormSchema} from "@/components/Form/src/type";
-import useForm from "@/components/Form/src/hooks/useForm.ts";
+import useForm from "@/components/VForm/src/hooks/useForm.ts";
 import Input from "@/views/component_basic_example/components/input.vue";
-import {BasicForm} from "@/components/VForm";
+import {BasicForm, FormSchema} from "@/components/VForm";
 import RadioGroup from "@/components/RadioGroup/RadioGroup.vue";
 import CheckBoxGroup from "@/components/CheckBoxGroup/CheckBoxGroup.vue";
 import {componentMap} from "@/components/VForm/src/componentMap.ts";
 
 
 const schemas = ref<FormSchema> ( [
+
+
   {
-    field: 'name',
-    component: 'Input',
+    field: 'price222',
+    component: 'DataInput',
+    defaultValue:'123',
     label: '菜品价格',
-    required: true,
     componentProps: {
-      type: "textarea",
       onChange(val) {
         console.log ( val, "val" )
-      }
-    },
+      },
+    }
+
+  },
+  {
+    field: 'price111',
+    component: 'Input',
+    defaultValue:'123',
+    label: '菜品价格',
+    required: true,
 
 
   },
   {
-    field: 'price',
+    field: 'price1',
     component: 'Input',
+    defaultValue:'123',
     label: '菜品价格',
     required: true,
-    dynamicDisabled: ({values}) => {
-      return values.Switch4 === '选项1';
-    },
-  },
 
+  },
+  {
+    field: 'price2',
+    component: 'Input',
+    defaultValue:'123',
+    label: '菜品价格',
+    required: true,
+
+  },
+  {
+    field: 'price3',
+    component: 'Input',
+    defaultValue:'123',
+    label: '菜品价格',
+    required: true,
+
+  },
+  {
+    field: 'price4',
+    component: 'Input',
+    defaultValue:'123',
+    label: '菜品价格',
+    required: true,
+
+  },
+  {
+    field: 'price5',
+    component: 'Input',
+    defaultValue:'123',
+    label: '菜品价格',
+    required: true,
+
+  },
   {
     field: 'description',
+    defaultValue:123,
     component: 'InputNumber',
+    componentProps: {},
     label: '菜品描述',
-
-  },
-  {
-    field: 'dishFlavors',
-    component: 'InputNumber',
-    label: '口味配置',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-  },
-  {
-    field: 'Switch',
-    component: 'Switch',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-    label: '口味配置',
-
-  },
-  {
-    field: 'Switch1',
-    component: 'Slider',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-    label: '口味配置',
-  },
-  {
-    field: 'date1',
-    component: 'DateSelect',
-    label: 'DateSelect',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( 'date' )
-        console.log ( val, "val" )
-      }
-    },
-
-  },
-  {
-    field: 'Switch3',
-    component: 'Rate',
-    label: 'Rate',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
   },
   {
     field: 'Switch4',
     component: 'DataSelect',
     label: 'Select',
+    defaultValue:"选项1",
+
     componentProps: {
-
-      width: "100%",
-
       onChange(val) {
         console.log ( val, "val" )
       },
@@ -135,71 +115,9 @@ const schemas = ref<FormSchema> ( [
   },
   {
     field: 'Switch5',
+    defaultValue:new Date(),
     component: 'TimeSelect',
     label: 'TimeSelect',
-
-  },
-  {
-    field: 'Switch6',
-    component: 'TimeSelect',
-    label: 'TimeSelect',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-  },
-  {
-    field: 'Switch7',
-    component: 'ColorPicker',
-    label: 'ColorPicker',
-    componentProps: {
-      width: "100%",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-  },
-  {
-    field: 'Switch8',
-    component: 'RadioGroup',
-    label: 'RadioGroup',
-    componentProps: {
-      options: [{
-        label: 1,
-        value: 1,
-      },
-        {
-          label: 2,
-          value: 2,
-        }],
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-  },
-  {
-    field: 'Switch9',
-    component: 'CheckBoxGroup',
-    label: 'CheckBoxGroup',
-    componentProps: {
-      options: ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen'],
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
-  },
-  {
-    field: 'Switch10',
-    component: 'CheckBox',
-    label: 'CheckBox',
-    componentProps: {
-      label: "Option 1",
-      onChange(val) {
-        console.log ( val, "val" )
-      }
-    },
   },
 
   {
@@ -492,14 +410,20 @@ const handleGetValue = async () => {
   var fieldsValue = await methods.getFieldsValue ();
   console.log ( fieldsValue, '1' )
 }
-const value = ref ( '' )
+const setValue = async () => {
+  await methods.setFieldsValue ( {
+    price: 1
+  } )
+}
+function handleSubmit(val){
+  console.log (val,'val')
+}
 </script>
 
 <template>
   <div>
     <PageMain>
-      <BasicForm @register="register"></BasicForm>
-      <el-button @click="handleGetValue">获取表单值</el-button>
+      <BasicForm @register="register" @submit="handleSubmit"></BasicForm>
     </PageMain>
   </div>
 </template>

@@ -19,7 +19,7 @@ export {
   responsiveMap,
   labelWidthMap
 }
-const cols = {xs: 24, sm: 12, md: 12, lg: 8, xl: 6, xxl: 6}
+const cols = {xs: 24, sm: 12, md: 12, lg: 8, xl: 8, xxl: 6}
 // const allSlotsName = computed(() => Object.keys(toRaw(slots)))
 const colArr = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs']
 

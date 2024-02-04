@@ -1,21 +1,17 @@
 <template>
-  <el-col v-bind="actionColOpt" v-if="showActionButtonGroup">
-    <div style="width: 100%" :style="{ textAlign: actionColOpt.style.textAlign }">
+  <el-form-item label="">
+    <el-col v-bind="actionColOpt" v-if="showActionButtonGroup" label="" :style="{ textAlign: actionColOpt.style.textAlign }" style="white-space: nowrap">
         <slot name="resetBefore"></slot>
+
         <el-button
-          class="mr-2"
-          v-bind="getResetBtnOptions"
           @click="resetAction"
           v-if="showResetButton"
         >
           {{ getResetBtnOptions.text }}
         </el-button>
         <slot name="submitBefore"></slot>
-
         <el-button
           type="primary"
-          class="mr-2"
-          v-bind="getSubmitBtnOptions"
           @click="submitAction"
           v-if="showSubmitButton"
         >
@@ -24,7 +20,6 @@
 
         <slot name="advanceBefore"></slot>
         <el-button
-          size="small"
           @click="toggleAdvanced"
           v-if="showAdvancedButton && !hideAdvanceBtn"
         >
@@ -32,8 +27,8 @@
           <BasicArrow class="ml-1" :expand="!isAdvanced" up />
         </el-button>
         <slot name="advanceAfter"></slot>
-    </div>
-  </el-col>
+    </el-col>
+  </el-form-item>
 </template>
 <script lang="ts" setup>
   import type { ColEx } from '../types';
@@ -41,7 +36,6 @@
   import { useFormContext } from '../hooks/useFormContext';
   import { propTypes } from '@/utils/propTypes';
   import {ButtonProps} from "element-plus";
-
   defineOptions({ name: 'BasicFormAction' });
 
   const props = defineProps({

@@ -1,9 +1,15 @@
 <script setup lang="ts">
+
 import {useRuleFormItem} from "@/hooks/component/useFormItem.ts";
 
 const props=defineProps({
   modelValue:{
-    type:Date
+    type:[Number,String],
+    default: null
+  },
+  options:{
+    type:Array,
+    default:()=>[]
   }
 })
 const emits=defineEmits(['input'])
@@ -16,19 +22,12 @@ const handleChange=(val)=>{
   }
   emits('input',val)
 }
-
 </script>
 
 <template>
-  <el-date-picker
-    :title="state"
-    v-bind="$attrs"
-    clearable
-    editable
-    v-model="state"
-    @change="handleChange"
-    type="datetime"
-  />
+  <el-radio-group v-bind="$attrs" v-model="state" @change="handleChange">
+    <el-radio-button :key="item.label" :label="item.label" v-for="item in props.options"/>
+  </el-radio-group>
 </template>
 
 <style scoped lang="scss">

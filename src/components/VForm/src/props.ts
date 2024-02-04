@@ -12,6 +12,9 @@ export const basicProps = {
     type: Object as PropType<Recordable>,
     default: () => ({}),
   },
+
+  onlyDisplayFormCount: propTypes.number.def(6),
+
   // 标签宽度  固定宽度
   labelWidth: {
     type: [Number, String] as PropType<number | string>,

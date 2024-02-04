@@ -109,7 +109,9 @@ export function useFormEvents({
    * @description: Set form value
    */
   async function setFieldsValue(values: Recordable): Promise<void> {
-    console.log ('设置')
+    if(values===undefined||values===null){
+      return
+    }
     if (Object.keys(values).length === 0) {
       return;
     }

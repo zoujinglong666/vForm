@@ -14,10 +14,12 @@ const icon = icons.filter(item => item.prefix === 'ep')[0]
         <template #icon>
           <SvgIcon name="ep:search" />
         </template>
+
         搜索
       </ElButton>
     </div>
     <ElDivider content-position="left">
+
       图标集合
     </ElDivider>
     <div v-for="(item, index) in icon.icons" :key="index" class="list-icon">

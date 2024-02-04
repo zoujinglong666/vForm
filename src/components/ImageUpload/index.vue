@@ -5,33 +5,30 @@ import { ElMessage } from 'element-plus'
 defineOptions({
   name: 'ImageUpload',
 })
+interface ImageUploadProps {
+  action: UploadProps['action']
+  headers?: UploadProps['headers']
+  data?: UploadProps['data']
+  name?: UploadProps['name']
+  url?: string
+  size?: number
+  width?: number
+  height?: number
+  placeholder?: string
+  notip?: boolean
+  ext?: string[]
+}
 
-const props = withDefaults(
-  defineProps<{
-    action: UploadProps['action']
-    headers?: UploadProps['headers']
-    data?: UploadProps['data']
-    name?: UploadProps['name']
-    url?: string
-    size?: number
-    width?: number
-    height?: number
-    placeholder?: string
-    notip?: boolean
-    ext?: string[]
-  }>(),
-  {
-    name: 'file',
-    url: '',
-    size: 2,
-    width: 150,
-    height: 150,
-    placeholder: '',
-    notip: false,
-    ext: () => ['jpg', 'png', 'gif', 'bmp'],
-  },
-)
-
+const props = withDefaults ( defineProps<ImageUploadProps> (), {
+  name: 'file',
+  url: '',
+  size: 2,
+  width: 150,
+  height: 150,
+  placeholder: '',
+  notip: true,
+  ext: () => ['jpg', 'png', 'gif', 'bmp','jpeg'],
+} );
 const emits = defineEmits<{
   'update:url': [
     url: string,
@@ -65,17 +62,13 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
   const fileName = file.name.split('.')
   const fileExt = fileName.at(-1) ?? ''
   const isTypeOk = props.ext.includes(fileExt)
-  const isSizeOk = file.size / 1024 / 1024 < props.size
+  const isSizeOk = file.size / 1024 / 1024 <2
   if (!isTypeOk) {
     ElMessage.error(`上传图片只支持 ${props.ext.join(' / ')} 格式！`)
   }
-  if (!isSizeOk) {
-    ElMessage.error(`上传图片大小不能超过 ${props.size}MB！`)
-  }
-  if (isTypeOk && isSizeOk) {
+
     uploadData.value.progress.preview = URL.createObjectURL(file)
-  }
-  return isTypeOk && isSizeOk
+  return true
 }
 const onProgress: UploadProps['onProgress'] = (file) => {
   uploadData.value.progress.percent = ~~file.percent
@@ -92,7 +85,6 @@ const onSuccess: UploadProps['onSuccess'] = (res) => {
     <ElUpload
       :show-file-list="false"
       :headers="headers"
-      :action="action"
       :data="data"
       :name="name"
       :before-upload="beforeUpload"
@@ -123,7 +115,7 @@ const onSuccess: UploadProps['onSuccess'] = (res) => {
       </div>
       <div v-show="url === '' && uploadData.progress.percent" class="progress" :style="`width:${width}px;height:${height}px;`">
         <ElImage :src="uploadData.progress.preview" :style="`width:${width}px;height:${height}px;`" fit="fill" />
-        <ElProgress type="circle" :width="Math.min(width, height) * 0.8" :percentage="uploadData.progress.percent" />
+<!--        <ElProgress type="circle" :width="Math.min(width, height) * 0.8" :percentage="uploadData.progress.percent" />-->
       </div>
     </ElUpload>
     <div v-if="!notip" class="el-upload__tip">

@@ -12,6 +12,7 @@
     clearable
     collapse-tags
     :max-collapse-tags="props.maxCollapseTags"
+    :multiple-limit="props.multipleLimit"
     :popper-append-to-body="false"
     :multiple="props.multiple"
     @change="handleSelectChange"
@@ -27,26 +28,27 @@
       :value="item.value"
     />
     <template v-for="(_, name) in $slots" #[name]="scope">
-      <slot :name="name" v-bind="scope || {}" />
+      <slot :name="name" v-bind="scope || {}"/>
     </template>
   </el-select>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch, reactive, unref, defineExpose } from "vue";
-import { isFunction } from "@/utils/is";
-import { ResultEnum } from "@/enums/httpEnum";
-import { unionBy } from "lodash";
-const selectData = ref([]);
-const copySelectData = ref([]);
-const isLoading = ref<boolean>(false);
-const isFirstLoaded = ref(false);
-const pages = ref(0);
-const selectRef = ref<any>();
-const pageState = reactive({
+import {computed, onMounted, reactive, ref, unref, watch} from "vue";
+import {isFunction} from "@/utils/is";
+import {ResultEnum} from "@/enums/httpEnum";
+import {unionBy} from "lodash";
+
+const selectData = ref ( [] );
+const copySelectData = ref ( [] );
+const isLoading = ref<boolean> ( false );
+const isFirstLoaded = ref ( false );
+const pages = ref ( 0 );
+const selectRef = ref<any> ();
+const pageState = reactive ( {
   pageNo: 1,
   pageSize: 10
-});
+} );
 
 interface DataSelectPropsType {
   title?: string;
@@ -66,9 +68,10 @@ interface DataSelectPropsType {
   api?: (params?: {}) => Promise<any>;
   params?: NonNullable<unknown>;
   maxCollapseTags?: number;
+  multipleLimit?: number;
 }
 
-const props = withDefaults(defineProps<DataSelectPropsType>(), {
+const props = withDefaults ( defineProps<DataSelectPropsType> (), {
   title: "",
   modelValue: "",
   placeholder: "",
@@ -78,38 +81,38 @@ const props = withDefaults(defineProps<DataSelectPropsType>(), {
   multiple: false,
   remote: false,
   label: "",
-  maxCollapseTags: 3
-});
-const emits = defineEmits(["update:modelValue", "change", "clear", "update:label", "blur", "focus"]);
-const customPlaceholder = computed<string>(() => {
-  if (props.placeholder) {
+  maxCollapseTags: 3,
+  multipleLimit: 3
+} );
+const emits = defineEmits ( ["update:modelValue", "change", "clear", "update:label", "blur", "focus"] );
+const customPlaceholder = computed<string> ( () => {
+  if ( props.placeholder ) {
     return props.placeholder;
   }
   return `请选择${props.title || ""}`;
-});
+} );
 
-onMounted(() => {
-  fetch();
-});
+onMounted ( () => {
+  fetch ();
+} );
 
-const valueCom = computed({
+const valueCom = computed ( {
   get() {
     return props.modelValue;
   },
   set(val) {
-    console.log(val, "val");
-    if (val == null || val == undefined) {
-      emits("update:modelValue", "");
+    if ( val == null ) {
+      emits ( "update:modelValue", "" );
     }
-    emits("update:modelValue", val);
+    emits ( "update:modelValue", val );
   }
-});
+} );
 
 const handleSelectChange = val => {
-  if (props.multiple) {
-    multipleChange(val);
+  if ( props.multiple ) {
+    multipleChange ( val );
   } else {
-    singleChange(val);
+    singleChange ( val );
   }
 };
 
@@ -119,37 +122,37 @@ async function fetch() {
   //   return
   // }
 
-  if (props.options) {
-    selectData.value = props.options || [];
+  if ( props.options.length ) {
+    selectData.value = (props.options) || [];
     copySelectData.value = selectData.value;
   } else {
     const api = props?.api;
-    if (!api || !isFunction(api) || isLoading.value) {
+    if ( !api || !isFunction ( api ) || isLoading.value ) {
       return;
     }
-    await getOptions(api);
+    await getOptions ( api );
   }
 }
 
 function multipleChange(value: any[]) {
-  const list = selectData.value.reduce((acc, cur) => {
-    if ((value as any[]).includes(cur[props.valueKey])) {
-      acc.push(cur);
+  const list = selectData.value.reduce ( (acc, cur) => {
+    if ( (value as any[]).includes ( cur[props.valueKey] ) ) {
+      acc.push ( cur );
     }
     return acc;
-  }, []);
-  const labelStr = list.map(item => item[props.labelKey]).join("");
-  emits("change", value, unionBy(list, props.valueKey));
-  emits("update:modelValue", value, unionBy(list, props.valueKey));
-  emits("update:label", labelStr);
+  }, [] );
+  const labelStr = list.map ( item => item[props.labelKey] ).join ( "" );
+  emits ( "change", value, unionBy ( list, props.valueKey ) );
+  emits ( "update:modelValue", value, unionBy ( list, props.valueKey ) );
+  emits ( "update:label", labelStr );
 }
 
 function singleChange(value: string) {
-  const findItem = selectData.value.find(item => item[props.valueKey] === value);
+  const findItem = selectData.value.find ( item => item[props.valueKey] === value );
   const label = findItem?.[props.labelKey] ? findItem?.[props.labelKey] : "";
-  emits("change", value, findItem);
-  emits("update:modelValue", value);
-  emits("update:label", label);
+  emits ( "change", value, findItem );
+  emits ( "update:modelValue", value );
+  emits ( "update:label", label );
 }
 
 async function getOptions(api: (params?: {}) => Promise<any>) {
@@ -160,11 +163,11 @@ async function getOptions(api: (params?: {}) => Promise<any>) {
       ...(props.params || {}),
       ...pageState
     };
-    const { data, code } = await api(params);
-    if (code === ResultEnum.SUCCESS) {
+    const {data, code} = await api ( params );
+    if ( code === ResultEnum.SUCCESS ) {
       const pageData = data?.data as any[];
       pages.value = data.pages;
-      selectData.value = (selectData.value ?? []).concat(pageData);
+      selectData.value = (selectData.value ?? []).concat ( pageData );
       copySelectData.value = selectData.value;
     }
   } catch (e) {
@@ -185,47 +188,47 @@ interface OptionsItem {
   [name: string]: any;
 }
 
-const getOptionsCom = computed(() => {
-  const { labelKey = "optionText", valueKey = "optionValue", numberToString } = props;
-  const data = unref(selectData).reduce(
+const getOptionsCom = computed ( () => {
+  const {labelKey = "optionText", valueKey = "optionValue", numberToString} = props;
+  const data = unref ( selectData ).reduce (
     (prev, next: any) => {
-      if (next) {
+      if ( next ) {
         const value = next[valueKey ?? DEFAULT_VALUE_KEY] || "";
         const label = next[labelKey ?? DEFAULT_LABEL_KEY] || "";
-        prev.push({
+        prev.push ( {
           ...next,
           label,
           value: numberToString ? `${value}` : value
-        });
+        } );
       }
       return prev;
     },
     [] as OptionsItem[] as any[]
   );
   return data.length > 0 ? data : props.options || [];
-});
+} );
 
 const emitChange = val => {
-  emits("update:modelValue", val);
-  emits("change", val);
+  emits ( "update:modelValue", val );
+  emits ( "change", val );
 };
 const handleSelectClear = () => {
-  emitChange("");
+  emitChange ( "" );
 };
-watch(
+watch (
   () => props.label,
   async newValue => {
-    emits("update:label", newValue || "");
+    emits ( "update:label", newValue || "" );
   },
   {
     immediate: true
   }
 );
-watch(
+watch (
   () => props.modelValue,
   async newValue => {
-    if (props.modelValue === "" || props.modelValue === null || props.modelValue === undefined)
-      emits("update:modelValue", newValue || "");
+    if ( props.modelValue === "" || props.modelValue === null || props.modelValue === undefined )
+      emits ( "update:modelValue", newValue || "" );
   },
   {
     immediate: true
@@ -233,22 +236,22 @@ watch(
 );
 
 const handleBlur = () => {
-  if (selectRef.value) {
-    selectRef.value?.blur();
-    emits("blur");
+  if ( selectRef.value ) {
+    selectRef.value?.blur ();
+    emits ( "blur" );
   }
 };
 const handleFocus = () => {
-  if (selectRef.value) {
-    selectRef.value?.focus();
-    emits("focus");
+  if ( selectRef.value ) {
+    selectRef.value?.focus ();
+    emits ( "focus" );
   }
 };
 
-defineExpose({
-  blur: handleBlur(),
-  focus: handleFocus()
-});
+defineExpose ( {
+  blur: handleBlur (),
+  focus: handleFocus ()
+} );
 </script>
 
 <style scoped></style>

@@ -3,8 +3,10 @@ import {useRuleFormItem} from "@/hooks/component/useFormItem.ts";
 
 const props=defineProps({
   modelValue:{
-    type:Date
-  }
+    type:[Number,String],
+    default: null
+  },
+
 })
 const emits=defineEmits(['input'])
 const emitData = ref('');
@@ -16,19 +18,10 @@ const handleChange=(val)=>{
   }
   emits('input',val)
 }
-
 </script>
 
 <template>
-  <el-date-picker
-    :title="state"
-    v-bind="$attrs"
-    clearable
-    editable
-    v-model="state"
-    @change="handleChange"
-    type="datetime"
-  />
+  <el-input-number style="width: 100%" v-model="state" :min="-Infinity" :max="Infinity" @change="handleChange" />
 </template>
 
 <style scoped lang="scss">
