@@ -33,7 +33,7 @@
 
         </el-col>
 
-        <ElFormItem label-width="80px">
+        <ElFormItem label-width="auto" style="white-space: nowrap">
           <div style="white-space: nowrap">
             <ElButton type="primary" @click="submitAction">
               筛选
@@ -86,7 +86,7 @@ import {useModalContext} from '@/components/Modal'
 import {basicProps} from './props';
 import {useDesign} from '@/hooks/web/useDesign';
 import {cloneDeep} from 'lodash-es';
-import {labelWidthMap, responsiveMap} from "@/components/VForm/src/constant";
+import {labelWidthMap, responsiveMap,labelWidthAutoMap} from "@/components/VForm/src/constant";
 
 defineOptions ( {name: 'BasicForm'} );
 
@@ -258,12 +258,13 @@ useAutoFocus ( {
   formElRef: formElRef as Ref<FormActionType>,
 } );
 const labelWidthCalc = computed ( () => {
+
   const {labelWidth} = unref ( getProps )
   if ( labelPositionCalc.value === 'top' ) {
-    return ''
+    return 'auto'
   } else {
     if ( labelWidth ) return labelWidth
-    return labelWidthMap?.[currentBreakpoint.value]
+    return labelWidthAutoMap?.[currentBreakpoint.value]
   }
 
 } )

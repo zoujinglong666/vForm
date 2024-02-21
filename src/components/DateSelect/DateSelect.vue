@@ -28,8 +28,8 @@ const handleChange=(val)=>{
     clearable
     editable
     @change="handleChange"
-    type="date"
-    placeholder="Pick a day"
+    type="Date"
+    :title="state"
   />
 </template>
 

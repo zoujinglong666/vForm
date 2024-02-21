@@ -6,7 +6,7 @@
     ref="selectRef"
     :placeholder="customPlaceholder"
     :disabled="props.disabled"
-    :title="props.modelValue"
+    :title="props.label"
     default-first-option
     filterable
     clearable
